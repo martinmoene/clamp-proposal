@@ -8,10 +8,10 @@
 An algorithm to "clamp" a value between a pair of boundary values  (Revision -1)
 ==================================================================================
 
-ISO/IEC JTC1 SC22 WG21 N*dddd* *yyyy-mm-dd* 
+ISO/IEC JTC1 SC22 WG21 D*dddd* *yyyy-mm-dd* 
 
-*Niels Dekker, NielsDekker (at) xs4all.nl*  
-*Martin Moene, martin.moene (at) gmail.com*
+*Martin Moene, martin.moene (at) gmail.com*  
+*Niels Dekker, n.dekker (at) xs4all.nl*
 
 **Contents**  
 [Introduction](#introduction)  
@@ -28,7 +28,7 @@ ISO/IEC JTC1 SC22 WG21 N*dddd* *yyyy-mm-dd*
 
 Introduction
 --------------
-The algorithm proposed here "clamps" a value between a pair of boundary values, much like `std::min()` and `std::max()` do for a single boundary value. The idea and interfaces are inspired by clamp in the the Boost.Algorithm library authored by Marshall Clow.
+The algorithm proposed here "clamps" a value between a pair of boundary values. The idea and interfaces are inspired by clamp in the Boost.Algorithm library authored by Marshall Clow.
 
 
 <a name="motivation"></a>
@@ -39,11 +39,11 @@ It is a common programming task to constrain a value to fall within certain limi
 
 So, we'd like to have a concise way to obtain a value that is forced to fall within a range we request, much like we can limit a value to a defined minimum or maximum. For example:
   
-	const auto clamped_value = clamp( value, min_value, max_value );
+	auto clamped_value = clamp( value, min_value, max_value );
 
 Without a standardized way, people may (need to) define their own version of "clamp" or resort to a less clear solution such as[^1]: 
 
-	const auto clamped_value = std::min( std::max( value, min_value ), max_value );
+	auto clamped_value = std::min( std::max( value, min_value ), max_value );
 
 In addition to the boundary values, one can provide a predicate that evaluates if a value is within the boundary.
  
@@ -59,7 +59,7 @@ Again, a predicate can be provided that evaluates if a value is within the bound
 
 	[@Niels: image processing example ?]
 
-Function `clamp()` already exists in C++ libraries such as Boost [[1]](#ref1) and Microsoft AMP [[2]](#ref2). The Python library scipy/numpy provides `clip()` for the same purpose [[3]](#ref3).
+Function `clamp()` already exists in C++ libraries such as Boost [[1]](#ref1) and Microsoft AMP [[2]](#ref2). The Qt Project provides `qBound` [[Q]](#refQ) , and the Python library scipy/numpy provides `clip()` [[3]](#ref3) for the same purpose.
 
 
 <a name="impact"></a>
@@ -149,9 +149,10 @@ TBD
 References
 ---------------
 <a name="ref1"></a>[1] Marshall Clow. [clamp in the Boost Algorithm Library](http://www.boost.org/doc/libs/1_55_0/libs/algorithm/doc/html/algorithm/Misc.html#the_boost_algorithm_library.Misc.clamp).   
-Note: the Boost documentation shows `clamp()` returning a value, whereas the actual code returns a `const &`.  
+Note: the Boost documentation shows `clamp()` returning a value, whereas the actual code in [boost/algorithm/clamp.hpp](http://www.boost.org/doc/libs/1_55_0/boost/algorithm/clamp.hpp) returns a `const &`.     
 <a name="ref2"></a>[2] Microsoft. [C++ Accelerated Massive Parallelism library (AMP)](http://msdn.microsoft.com/en-us/library/hh265137.aspx).  
-<a name="ref3"></a>[3] Scipy.org. [numpy.clip()](docs.scipy.org/doc/numpy/reference/generated/numpy.clip.html)  
+<a name="refQ"></a>[Q] Qt Project. [Documentation on qBound](http://qt-project.org/doc/qt-5/qtglobal.html#qBound)  
+<a name="ref3"></a>[3] Scipy.org. [numpy.clip()](http://docs.scipy.org/doc/numpy/reference/generated/numpy.clip.html)  
 <a name="ref4"></a>[4] Stephan T. Lavavej. [Making Operator Functors greater<> (N3421, HTML)](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3421.htm). 2012-09-20.  
 <a name="ref5"></a>[5] ISO/IEC. [Working Draft, Standard for Programming Language C++ (N3797, PDF)](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3797.pdf). Section 20.9.5. 2013-10-13.  
 <a name="ref6"></a>[6] Martin Moene. [Clamp algorithm (GitHub)](https://github.com/martinmoene/clamp).  
