@@ -1,0 +1,19 @@
+<style>
+p {
+    margin-top: 0;
+}
+h1, h2 {
+    color: navy;
+}
+h2 {
+    margin-top: 1em;
+    margin-bottom: 0em;
+}
+code {
+    color: navy;
+}
+pre code {
+    display: block;
+    margin-left: 2em;
+}
+</style>
