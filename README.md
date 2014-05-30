@@ -149,7 +149,7 @@ TBD
 References
 ---------------
 <a name="ref1"></a>[1] Marshall Clow. [clamp in the Boost Algorithm Library](http://www.boost.org/doc/libs/1_55_0/libs/algorithm/doc/html/algorithm/Misc.html#the_boost_algorithm_library.Misc.clamp).   
-Note: the Boost documentation shows `clamp()` returning a value, whereas the actual code in [boost/algorithm/clamp.hpp](http://www.boost.org/doc/libs/1_55_0/boost/algorithm/clamp.hpp) returns a `const &`.     
+Note: the Boost documentation shows `clamp()` returning a value, whereas the actual code in [boost/algorithm/clamp.hpp](http://www.boost.org/doc/libs/1_55_0/boost/algorithm/clamp.hpp) returns a `const &`. See [ticket 10081](https://svn.boost.org/trac/boost/ticket/10081).  
 <a name="ref2"></a>[2] Microsoft. [C++ Accelerated Massive Parallelism library (AMP)](http://msdn.microsoft.com/en-us/library/hh265137.aspx).  
 <a name="ref3"></a>[3] Qt Project. [Documentation on qBound](http://qt-project.org/doc/qt-5/qtglobal.html#qBound)  
 <a name="ref4"></a>[4] Scipy.org. [numpy.clip()](http://docs.scipy.org/doc/numpy/reference/generated/numpy.clip.html)  
