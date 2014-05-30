@@ -59,21 +59,21 @@ Again, a predicate can be provided that evaluates if a value is within the bound
 
 	[@Niels: image processing example ?]
 
-Function `clamp()` already exists in C++ libraries such as Boost [[1]](#ref1) and Microsoft AMP [[2]](#ref2). The Qt Project provides `qBound` [[Q]](#refQ) , and the Python library scipy/numpy provides `clip()` [[3]](#ref3) for the same purpose.
+Function `clamp()` already exists in C++ libraries such as Boost [[1]](#ref1) and Microsoft AMP [[2]](#ref2). The Qt Project provides `qBound` [[3]](#ref3) , and the Python library scipy/numpy provides `clip()` [[4]](#ref4) for the same purpose.
 
 
 <a name="impact"></a>
 
 Impact On the Standard
 ------------------------
-The clamp algorithms require no changes to the core language and break no existing code. The proposed wording is dependent on the void specialization of `<functional>`'s operator functors that is available since C++14 [[4]](#ref4)[[5]](#ref5).
+The clamp algorithms require no changes to the core language and break no existing code. The proposed wording is dependent on the void specialization of `<functional>`'s operator functors that is available since C++14 [[5]](#ref5)[[6]](#ref6).
 
 
 <a name="comparison"></a>
 
 Comparison to clamp of Boost.Algorithm
 ----------------------------------------
-Our proposal defines a single function that can be used both with a user-defined predicate and without it. When no predicate is specified, the comparator defaults to `std::less<void>()`. The void specialization of `<functional>`'s operator functors introduced in C++14 enables comparison using the proper type [[4]](#ref4)[[5]](#ref5). 
+Our proposal defines a single function that can be used both with a user-defined predicate and without it. When no predicate is specified, the comparator defaults to `std::less<void>()`. The void specialization of `<functional>`'s operator functors introduced in C++14 enables comparison using the proper type [[5]](#ref5)[[6]](#ref6). 
 
 Boost's clamp on the other hand was conceived before C++14 and uses two separate functions. Also, supporting compatibility with different versions of C++ is a reason for a Boost library to not require C++14-specific properties.
 
@@ -112,7 +112,7 @@ Clamp a range of values per predicate, default `std::less<>`:
 
 Possible Implementation
 -------------------------
-This proposal can be implemented as pure library extension in C++14. A reference implementation of this proposal can be found at [[6]](#ref6).
+This proposal can be implemented as pure library extension in C++14. A reference implementation of this proposal can be found at [[7]](#ref7).
 
 Clamp a value per predicate:
 
@@ -151,11 +151,11 @@ References
 <a name="ref1"></a>[1] Marshall Clow. [clamp in the Boost Algorithm Library](http://www.boost.org/doc/libs/1_55_0/libs/algorithm/doc/html/algorithm/Misc.html#the_boost_algorithm_library.Misc.clamp).   
 Note: the Boost documentation shows `clamp()` returning a value, whereas the actual code in [boost/algorithm/clamp.hpp](http://www.boost.org/doc/libs/1_55_0/boost/algorithm/clamp.hpp) returns a `const &`.     
 <a name="ref2"></a>[2] Microsoft. [C++ Accelerated Massive Parallelism library (AMP)](http://msdn.microsoft.com/en-us/library/hh265137.aspx).  
-<a name="refQ"></a>[Q] Qt Project. [Documentation on qBound](http://qt-project.org/doc/qt-5/qtglobal.html#qBound)  
-<a name="ref3"></a>[3] Scipy.org. [numpy.clip()](http://docs.scipy.org/doc/numpy/reference/generated/numpy.clip.html)  
-<a name="ref4"></a>[4] Stephan T. Lavavej. [Making Operator Functors greater<> (N3421, HTML)](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3421.htm). 2012-09-20.  
-<a name="ref5"></a>[5] ISO/IEC. [Working Draft, Standard for Programming Language C++ (N3797, PDF)](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3797.pdf). Section 20.9.5. 2013-10-13.  
-<a name="ref6"></a>[6] Martin Moene. [Clamp algorithm (GitHub)](https://github.com/martinmoene/clamp).  
+<a name="ref3"></a>[3] Qt Project. [Documentation on qBound](http://qt-project.org/doc/qt-5/qtglobal.html#qBound)  
+<a name="ref4"></a>[4] Scipy.org. [numpy.clip()](http://docs.scipy.org/doc/numpy/reference/generated/numpy.clip.html)  
+<a name="ref5"></a>[5] Stephan T. Lavavej. [Making Operator Functors greater<> (N3421, HTML)](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3421.htm). 2012-09-20.  
+<a name="ref6"></a>[6] ISO/IEC. [Working Draft, Standard for Programming Language C++ (N3797, PDF)](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3797.pdf). Section 20.9.5. 2013-10-13.  
+<a name="ref7"></a>[7] Martin Moene. [Clamp algorithm (GitHub)](https://github.com/martinmoene/clamp).  
 
 [^1]: Or even:<pre><code>auto clamped_value = value;
 if      ( value < min_value ) clamped_value = min_value;
