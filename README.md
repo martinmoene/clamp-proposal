@@ -112,7 +112,7 @@ Clamp a range of values per predicate, default `std::less<>`:
 
 Possible Implementation
 -------------------------
-This proposal can be implemented as pure library extension in C++14. A reference implementation of this proposal can be found at [[7]](#ref7).
+This proposal can be implemented as pure library extension in C++14. A reference implementation of this proposal can be found at GitHub [[7]](#ref7).
 
 Clamp a value per predicate:
 
@@ -151,8 +151,8 @@ References
 <a name="ref1"></a>[1] Marshall Clow. [clamp in the Boost Algorithm Library](http://www.boost.org/doc/libs/1_55_0/libs/algorithm/doc/html/algorithm/Misc.html#the_boost_algorithm_library.Misc.clamp).   
 Note: the Boost documentation shows `clamp()` returning a value, whereas the actual code in [boost/algorithm/clamp.hpp](http://www.boost.org/doc/libs/1_55_0/boost/algorithm/clamp.hpp) returns a `const &`. See [ticket 10081](https://svn.boost.org/trac/boost/ticket/10081).  
 <a name="ref2"></a>[2] Microsoft. [C++ Accelerated Massive Parallelism library (AMP)](http://msdn.microsoft.com/en-us/library/hh265137.aspx).  
-<a name="ref3"></a>[3] Qt Project. [Documentation on qBound](http://qt-project.org/doc/qt-5/qtglobal.html#qBound)  
-<a name="ref4"></a>[4] Scipy.org. [numpy.clip()](http://docs.scipy.org/doc/numpy/reference/generated/numpy.clip.html)  
+<a name="ref3"></a>[3] Qt Project. [Documentation on qBound](http://qt-project.org/doc/qt-5/qtglobal.html#qBound).  
+<a name="ref4"></a>[4] Scipy.org. [Documentation on numpy.clip](http://docs.scipy.org/doc/numpy/reference/generated/numpy.clip.html).  
 <a name="ref5"></a>[5] Stephan T. Lavavej. [Making Operator Functors greater<> (N3421, HTML)](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3421.htm). 2012-09-20.  
 <a name="ref6"></a>[6] ISO/IEC. [Working Draft, Standard for Programming Language C++ (N3797, PDF)](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3797.pdf). Section 20.9.5. 2013-10-13.  
 <a name="ref7"></a>[7] Martin Moene. [Clamp algorithm (GitHub)](https://github.com/martinmoene/clamp).  
