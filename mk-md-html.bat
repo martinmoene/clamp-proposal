@@ -2,8 +2,6 @@
 
 setlocal
 
-if not exist Output mkdir Output
-
 for %%f in (*.md) do (
 
    echo %%f:
