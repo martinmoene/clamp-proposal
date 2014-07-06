@@ -68,7 +68,7 @@ Function `clamp()` already exists in C++ libraries such as Boost [[1]](#ref1) an
 
 <a name="impact"></a>
 
-Impact On the Standard
+Impact on the Standard
 ------------------------
 The clamp algorithms can be implemented as a pure library extension in C++14. The proposed wording is dependent on the void specialization of `<functional>`'s operator functors that is available since C++14 [[5]](#ref5)[[6]](#ref6).
 
