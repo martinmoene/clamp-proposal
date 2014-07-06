@@ -1,19 +1,23 @@
 <!--
 -- Created: 21 May 2014, Martin Moene
 --
--- Note 1: the interspersed HTML is added to support generating useful output via Pandoc.
--- Note 2: edited with MarkdownPad2 (http://markdownpad.com/).
+-- Note 1: edited with MarkdownPad2 (http://markdownpad.com/).
+-- Note 2: take care of trailing double space for formatting newline.
+-- Note 3: the interspersed HTML is added to support generating useful output via Pandoc (http://johnmacfarlane.net/pandoc/).
 -->
 
-An algorithm to "clamp" a value between a pair of boundary values  (Revision -1)
+An algorithm to "clamp" a value between a pair of boundary values  (Draft)
 ==================================================================================
 
-ISO/IEC JTC1 SC22 WG21 D*dddd* *yyyy-mm-dd* 
+ISO/IEC JTC1 SC22 WG21 D*dddd* *yyyy-mm-dd*
 
-*Martin Moene, martin.moene (at) gmail.com*  
-*Niels Dekker, n.dekker (at) xs4all.nl*
+<address>
+Martin Moene, martin.moene (at) gmail.com  
+Niels Dekker, n.dekker (at) xs4all.nl  
+</address>
 
-**Contents**  
+<a name="contents"></a>
+
 [Introduction](#introduction)  
 [Motivation](#motivation)  
 [Impact On the Standard](#impact)  
@@ -66,7 +70,7 @@ Function `clamp()` already exists in C++ libraries such as Boost [[1]](#ref1) an
 
 Impact On the Standard
 ------------------------
-The clamp algorithms require no changes to the core language and break no existing code. The proposed wording is dependent on the void specialization of `<functional>`'s operator functors that is available since C++14 [[5]](#ref5)[[6]](#ref6).
+The clamp algorithms can be implemented as a pure library extension in C++14. The proposed wording is dependent on the void specialization of `<functional>`'s operator functors that is available since C++14 [[5]](#ref5)[[6]](#ref6).
 
 
 <a name="comparison"></a>
@@ -77,6 +81,7 @@ Our proposal defines a single function that can be used both with a user-defined
 
 Boost's clamp on the other hand was conceived before C++14 and uses two separate functions. Also, supporting compatibility with different versions of C++ is a reason for a Boost library to not require C++14-specific properties.
 
+Like `std::min()` and `std::max()`, `clamp()` requires its arguments to be of the same  type, whereas, Boost's clamp accepts arguments of different type.
 
 <a name="motivation"></a>
 
@@ -84,9 +89,7 @@ Design Decisions
 ------------------
 We chose the name *clamp* as it is expressive and is already being used in other libraries [^2]. Another name could be *limit*. Other names for *clamp_range* could be *clamp_elements*, or *clamp_transform*.
 
-`clamp()` can be regarded as a sibling of `std::min()` and `std::max()`. This makes it desirable to follow their interface using constexpr, passing parameters by const reference and returning the result by const reference.
-
-[@Niels: write about benefit of returning by `const &` ?]
+`clamp()` can be regarded as a sibling of `std::min()` and `std::max()`. This makes it desirable to follow their interface using constexpr, passing parameters by const reference and returning the result by const reference. Passing values by `const &` is desired for types that have a possibly expensive copy constructor such as `cpp_int` of Boost.Multiprecision [[7]](#ref7) and `std::seminumeric::integer` from the Proposal for Unbounded-Precision Integer Types [[8](#8)].
 
 With the void specialization of `<functional>`'s operator functors available in C++14, we chose to combine the predicate and non-predicate versions into a single function and make `std::less<>()` its default comparator.
 
@@ -112,7 +115,7 @@ Clamp a range of values per predicate, default `std::less<>`:
 
 Possible Implementation
 -------------------------
-This proposal can be implemented as pure library extension in C++14. A reference implementation of this proposal can be found at GitHub [[7]](#ref7).
+A reference implementation of this proposal can be found at GitHub [[9]](#ref9).
 
 Clamp a value per predicate:
 
@@ -149,13 +152,15 @@ TBD
 References
 ---------------
 <a name="ref1"></a>[1] Marshall Clow. [clamp in the Boost Algorithm Library](http://www.boost.org/doc/libs/1_55_0/libs/algorithm/doc/html/algorithm/Misc.html#the_boost_algorithm_library.Misc.clamp).   
-Note: the Boost documentation shows `clamp()` returning a value, whereas the actual code in [boost/algorithm/clamp.hpp](http://www.boost.org/doc/libs/1_55_0/boost/algorithm/clamp.hpp) returns a `const &`. See [ticket 10081](https://svn.boost.org/trac/boost/ticket/10081).  
+Note: the Boost documentation shows `clamp()` using pass by value, whereas the actual code in [boost/algorithm/clamp.hpp](http://www.boost.org/doc/libs/1_55_0/boost/algorithm/clamp.hpp) uses `const &`. See [ticket 10081](https://svn.boost.org/trac/boost/ticket/10081).  
 <a name="ref2"></a>[2] Microsoft. [C++ Accelerated Massive Parallelism library (AMP)](http://msdn.microsoft.com/en-us/library/hh265137.aspx).  
 <a name="ref3"></a>[3] Qt Project. [Documentation on qBound](http://qt-project.org/doc/qt-5/qtglobal.html#qBound).  
 <a name="ref4"></a>[4] Scipy.org. [Documentation on numpy.clip](http://docs.scipy.org/doc/numpy/reference/generated/numpy.clip.html).  
 <a name="ref5"></a>[5] Stephan T. Lavavej. [Making Operator Functors greater<> (N3421, HTML)](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3421.htm). 2012-09-20.  
 <a name="ref6"></a>[6] ISO/IEC. [Working Draft, Standard for Programming Language C++ (N3797, PDF)](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3797.pdf). Section 20.9.5. 2013-10-13.  
-<a name="ref7"></a>[7] Martin Moene. [Clamp algorithm (GitHub)](https://github.com/martinmoene/clamp).  
+<a name="ref7"></a>[7] John Maddock. [Boost.Multiprecision](http://www.boost.org/doc/libs/1_55_0/libs/multiprecision/).  
+<a name="8"></a>[8] Pete Becker. [Proposal for Unbounded-Precision Integer Types (N3965)](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4038.htm).
+<a name="ref9"></a>[9] Martin Moene. [Clamp algorithm (GitHub)](https://github.com/martinmoene/clamp).  
 
 [^1]: Or even:<pre><code>auto clamped_value = value;
 if      ( value < min_value ) clamped_value = min_value;
