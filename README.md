@@ -159,7 +159,7 @@ Note: the Boost documentation shows `clamp()` using pass by value, whereas the a
 <a name="ref5"></a>[5] Stephan T. Lavavej. [Making Operator Functors greater<> (N3421, HTML)](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3421.htm). 2012-09-20.  
 <a name="ref6"></a>[6] ISO/IEC. [Working Draft, Standard for Programming Language C++ (N3797, PDF)](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3797.pdf). Section 20.9.5. 2013-10-13.  
 <a name="ref7"></a>[7] John Maddock. [Boost.Multiprecision](http://www.boost.org/doc/libs/1_55_0/libs/multiprecision/).  
-<a name="8"></a>[8] Pete Becker. [Proposal for Unbounded-Precision Integer Types (N3965)](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4038.htm).
+<a name="8"></a>[8] Pete Becker. [Proposal for Unbounded-Precision Integer Types (N3965)](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4038.htm).  
 <a name="ref9"></a>[9] Martin Moene. [Clamp algorithm (GitHub)](https://github.com/martinmoene/clamp).  
 
 [^1]: Or even:<pre><code>auto clamped_value = value;
