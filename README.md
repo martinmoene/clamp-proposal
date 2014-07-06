@@ -145,7 +145,7 @@ Clamp range of values per predicate:
 
 Acknowledgements
 ------------------
-TBD
+Thanks to Marshall Clow for Boost.Algorithm's clamp which inspired this proposal.
 
 <a name="references"></a>
 
