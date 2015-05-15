@@ -27,6 +27,7 @@ Niels Dekker, n.dekker (at) xs4all.nl
 [Design decisions](#design)  
 [Proposed wording](#wording)  
 [Possible implementation](#implementation)  
+[Acknowledgements](#acknowledgements)  
 [References](#references)  
 
 
@@ -51,19 +52,17 @@ Without a standardized way, people may (need to) define their own version of "cl
 
 	auto clamped_value = std::min( std::max( value, min_value ), max_value );
 
-In addition to the boundary values, one can provide a predicate that evaluates if a value is within the boundary.
- 
-	[@Niels: convincing predicate example ?]
-
-Besides the algorithm to clamp a single value, there is an algorithm to clamp a series of values: 
+For convenience we also propose an algorithm to clamp a series of values: 
 
 	std::vector<int> v{ 1,2,3,4,5,6,7,8,9 };
 	
 	auto clamped_v = clamp_range( v.begin(), v.end(), v.begin(), 3, 7 );
 
-Again, a predicate can be provided that evaluates if a value is within the boundary:
-
-	[@Niels: image processing example ?]
+In addition to the boundary values, one can provide a predicate that evaluates if a value is within the boundary.
+ 
+	struct rgb{ ... };
+	
+	auto clamped_rgb = clamp( rgb_value, rgb_lo, rgb_hi, rgb_compare );
 
 Function `clamp()` already exists in C++ libraries such as Boost [[1]](#ref1) and Microsoft AMP [[2]](#ref2). The Qt Project provides `qBound` [[3]](#ref3) , and the Python library scipy/numpy provides `clip()` [[4]](#ref4) for the same purpose.
 
@@ -108,24 +107,27 @@ Proposed wording
 template<class T, class Compare = std::less<>>
 constexpr const T& clamp( const T& v, const T& lo, const T& hi, Compare comp = Compare() );
 ```
-1 *Requires*: Type `T` is `LessThanComparable` (Table 18). 
+1 *Requires*: Type `T` is `LessThanComparable` (Table 18).  
 
-2 *Returns*:     
+2 *Returns*: The larger value of `v` and `lo` if `v` is smaller than `hi`, otherwise the smaller value of `v` and `hi`.  
 
-3 *Remarks*: Complexity: clamp will make either one or two calls to the comparison predicate before returning one of the three parameters. 
+3 *Complexity*: `clamp` will call `comp` either one or two times before returning one of the three parameters.  
 
+4 *Remarks*: Returns the first argument when it is equivalent to one of the boundary arguments. 
 
 ```
 template<class InputIterator, class OutputIterator, class Compare = std::less<>>
-OutputIterator clamp_range( InputIterator first, InputIterator last, OutputIterator out,
+OutputIterator clamp_range( InputIterator first, InputIterator last, OutputIterator result,
     typename std::iterator_traits<InputIterator>::value_type const& lo,
     typename std::iterator_traits<InputIterator>::value_type const& hi, Compare comp = Compare() );
 ```
-1 *Requires*:  
+1 *Requires*: T is `LessThanComparable` (Table 18) and `CopyAssignable` (Table 23).  
 
-2 *Returns*:  
+2 *Returns*: `result + (last - first)`.  
 
-3 *Remarks*: Complexity: clamp will make either one or two calls to the comparison predicate before returning one of the three parameters. 
+3 *Complexity*: Exactly `last - first` applications of `clamp` with the corresponding predicate.  
+
+4 *Remarks*: `result` may be equal to `first`.   
 
 </div>
 
@@ -148,14 +150,14 @@ Clamp range of values per predicate:
 
 	template<class InputIterator, class OutputIterator, class Compare>
 	OutputIterator clamp_range(
-	    InputIterator first, InputIterator last, OutputIterator out,
+	    InputIterator first, InputIterator last, OutputIterator result,
 	    typename std::iterator_traits<InputIterator>::value_type const& lo,
 	    typename std::iterator_traits<InputIterator>::value_type const& hi, Compare comp )
 	{
 	    using arg_type = decltype(lo);
 	
 	    return std::transform(
-	        first, last, out, [&](arg_type val) -> arg_type { return clamp(val, lo, hi, comp); } );
+	        first, last, result, [&](arg_type val) -> arg_type { return clamp(val, lo, hi, comp); } );
 	}
 
 
@@ -163,19 +165,19 @@ Clamp range of values per predicate:
 
 Acknowledgements
 ------------------
-Thanks to Marshall Clow for Boost.Algorithm's clamp which inspired this proposal.
+Thanks to Marshall Clow for Boost.Algorithm's clamp which inspired this proposal and to Jonathan Wakely for his help with the proposing process.
 
 <a name="references"></a>
 
 References
 ---------------
-<a name="ref1"></a>[1] Marshall Clow. [clamp in the Boost Algorithm Library](http://www.boost.org/doc/libs/1_55_0/libs/algorithm/doc/html/algorithm/Misc.html#the_boost_algorithm_library.Misc.clamp).   
-Note: the Boost documentation shows `clamp()` using pass by value, whereas the actual code in [boost/algorithm/clamp.hpp](http://www.boost.org/doc/libs/1_55_0/boost/algorithm/clamp.hpp) uses `const &`. See [ticket 10081](https://svn.boost.org/trac/boost/ticket/10081).  
+<a name="ref1"></a>[1] Marshall Clow. [clamp in the Boost Algorithm Library](http://www.boost.org/doc/libs/1_58_0/libs/algorithm/doc/html/algorithm/Misc.html#the_boost_algorithm_library.Misc.clamp).   
+Note: the Boost documentation shows `clamp()` using pass by value, whereas the actual code in [boost/algorithm/clamp.hpp](http://www.boost.org/doc/libs/1_58_0/boost/algorithm/clamp.hpp) uses `const &`. See [ticket 10081](https://svn.boost.org/trac/boost/ticket/10081).  
 <a name="ref2"></a>[2] Microsoft. [C++ Accelerated Massive Parallelism library (AMP)](http://msdn.microsoft.com/en-us/library/hh265137.aspx).  
 <a name="ref3"></a>[3] Qt Project. [Documentation on qBound](http://qt-project.org/doc/qt-5/qtglobal.html#qBound).  
 <a name="ref4"></a>[4] Scipy.org. [Documentation on numpy.clip](http://docs.scipy.org/doc/numpy/reference/generated/numpy.clip.html).  
 <a name="ref5"></a>[5] Stephan T. Lavavej. [Making Operator Functors greater<> (N3421, HTML)](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3421.htm). 2012-09-20.  
-<a name="ref6"></a>[6] ISO/IEC. [Working Draft, Standard for Programming Language C++ (N3797, PDF)](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3797.pdf). Section 20.9.5. 2013-10-13.  
+<a name="ref6"></a>[6] ISO/IEC. [Working Draft, Standard for Programming Language C++ (N4296, PDF)](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4296.pdf). Section 20.9.6. 2014-11-19.  
 <a name="ref7"></a>[7] John Maddock. [Boost.Multiprecision](http://www.boost.org/doc/libs/1_55_0/libs/multiprecision/).  
 <a name="8"></a>[8] Pete Becker. [Proposal for Unbounded-Precision Integer Types (N4038)](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4038.html).  
 <a name="ref9"></a>[9] Martin Moene. [Clamp algorithm (GitHub)](https://github.com/martinmoene/clamp).  
