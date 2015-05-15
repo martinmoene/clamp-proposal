@@ -4,6 +4,8 @@
 -- Note 1: edited with MarkdownPad2 (http://markdownpad.com/).
 -- Note 2: take care of trailing double space for formatting newline.
 -- Note 3: the interspersed HTML is added to support generating useful output via Pandoc (http://johnmacfarlane.net/pandoc/).
+--
+-- IsoCpp: https://isocpp.org/std/library-design-guidelines
 -->
 
 An algorithm to "clamp" a value between a pair of boundary values  (Draft)
@@ -20,11 +22,11 @@ Niels Dekker, n.dekker (at) xs4all.nl
 
 [Introduction](#introduction)  
 [Motivation](#motivation)  
-[Impact On the Standard](#impact)  
+[Impact on the standard](#impact)  
 [Comparison to clamp of Boost.Algorithm](#comparison)  
-[Design Decisions](#design)  
-[Technical Specifications / Standardese](#specifications)  
-[Possible Implementation](#implementation)  
+[Design decisions](#design)  
+[Proposed wording](#wording)  
+[Possible implementation](#implementation)  
 [References](#references)  
 
 
@@ -55,9 +57,9 @@ In addition to the boundary values, one can provide a predicate that evaluates i
 
 Besides the algorithm to clamp a single value, there is an algorithm to clamp a series of values: 
 
-	std::vector<int> a{ 1,2,3,4,5,6,7,8,9 };
+	std::vector<int> v{ 1,2,3,4,5,6,7,8,9 };
 	
-	auto out = clamp_range( a.begin(), a.end(), a.begin(), 3, 7 );
+	auto clamped_v = clamp_range( v.begin(), v.end(), v.begin(), 3, 7 );
 
 Again, a predicate can be provided that evaluates if a value is within the boundary:
 
@@ -68,7 +70,7 @@ Function `clamp()` already exists in C++ libraries such as Boost [[1]](#ref1) an
 
 <a name="impact"></a>
 
-Impact on the Standard
+Impact on the standard
 ------------------------
 The clamp algorithms can be implemented as a pure library extension in C++14. The proposed wording is dependent on the void specialization of `<functional>`'s operator functors that is available since C++14 [[5]](#ref5)[[6]](#ref6).
 
@@ -85,7 +87,7 @@ Like `std::min()` and `std::max()`, `clamp()` requires its arguments to be of th
 
 <a name="motivation"></a>
 
-Design Decisions
+Design decisions
 ------------------
 We chose the name *clamp* as it is expressive and is already being used in other libraries [^2]. Another name could be *limit*. Other names for *clamp_range* could be *clamp_elements*, or *clamp_transform*.
 
@@ -94,26 +96,42 @@ We chose the name *clamp* as it is expressive and is already being used in other
 With the void specialization of `<functional>`'s operator functors available in C++14, we chose to combine the predicate and non-predicate versions into a single function and make `std::less<>()` its default comparator.
 
 
-<a name="specifications"></a>
+<a name="wording"></a>
 
-Technical Specifications / Standardese
-----------------------------------------
-Clamp a value per predicate, default `std::less<>`:
+Proposed wording
+-------------------
 
-	template<class T, class Compare = std::less<>>
-	constexpr const T& clamp( const T& val, const T& lo, const T& hi, Compare comp = Compare() );
-	
-Clamp a range of values per predicate, default `std::less<>`:
-	
-	template<class InputIterator, class OutputIterator, class Compare = std::less<>>
-	OutputIterator clamp_range( InputIterator first, InputIterator last, OutputIterator out,
-	    typename std::iterator_traits<InputIterator>::value_type const& lo,
-	    typename std::iterator_traits<InputIterator>::value_type const& hi, Compare comp = Compare() );
+<div class="std">
+<h3>X.Y.Z Bounded value<span style="float:right">[alg.clamp]</span></h3>
 
+```
+template<class T, class Compare = std::less<>>
+constexpr const T& clamp( const T& v, const T& lo, const T& hi, Compare comp = Compare() );
+```
+1 *Requires*: Type `T` is `LessThanComparable` (Table 18). 
+
+2 *Returns*:     
+
+3 *Remarks*: Complexity: clamp will make either one or two calls to the comparison predicate before returning one of the three parameters. 
+
+
+```
+template<class InputIterator, class OutputIterator, class Compare = std::less<>>
+OutputIterator clamp_range( InputIterator first, InputIterator last, OutputIterator out,
+    typename std::iterator_traits<InputIterator>::value_type const& lo,
+    typename std::iterator_traits<InputIterator>::value_type const& hi, Compare comp = Compare() );
+```
+1 *Requires*:  
+
+2 *Returns*:  
+
+3 *Remarks*: Complexity: clamp will make either one or two calls to the comparison predicate before returning one of the three parameters. 
+
+</div>
 
 <a name="implementation"></a>
 
-Possible Implementation
+Possible implementation
 -------------------------
 A reference implementation of this proposal can be found at GitHub [[9]](#ref9).
 
