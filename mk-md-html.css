@@ -16,4 +16,15 @@ pre code {
     display: block;
     margin-left: 2em;
 }
+div.std {
+    background-color: #f8f8f8;
+    border: 1px solid #d1d1d1;
+    padding: 0 1em 1em;
+    margin-top:0.5em;
+    margin-left: 1em;
+    margin-right: 1em;
+}
+div.std pre code {
+    margin-left: 0em;
+}
 </style>
