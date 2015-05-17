@@ -6,17 +6,19 @@
 -- Note 3: the interspersed HTML is added to support generating useful output via Pandoc (http://johnmacfarlane.net/pandoc/).
 --
 -- IsoCpp: https://isocpp.org/std/library-design-guidelines
+--
+-- ISO/IEC JTC1 SC22 WG21 D*dddd* *yyyy-mm-dd*
 -->
 
-An algorithm to "clamp" a value between a pair of boundary values  (Draft)
-==================================================================================
+**Document number**: N4536  
+**Date**: 2015-05-17  
+**Project**: Programming Language C++, Library Evolution Working Group  
+<!--**Revises**: Nxxx -->
+**Reply to**: Martin Moene &lt;martin.moene (at) gmail.com&gt;, Niels Dekker &lt;n.dekker (at) xs4all.nl&gt;  
 
-ISO/IEC JTC1 SC22 WG21 D*dddd* *yyyy-mm-dd*
 
-<address>
-Martin Moene, martin.moene (at) gmail.com  
-Niels Dekker, n.dekker (at) xs4all.nl  
-</address>
+An algorithm to "clamp" a value between a pair of boundary values
+===================================================================
 
 <a name="contents"></a>
 
