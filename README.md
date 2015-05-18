@@ -13,7 +13,6 @@
 **Document number**: N4536  
 **Date**: 2015-05-17  
 **Project**: Programming Language C++, Library Evolution Working Group  
-<!--**Revises**: Nxxx -->
 **Reply to**: Martin Moene &lt;martin.moene (at) gmail.com&gt;, Niels Dekker &lt;n.dekker (at) xs4all.nl&gt;  
 
 
@@ -102,8 +101,8 @@ With the void specialization of `<functional>`'s operator functors available in 
 Proposed wording
 -------------------
 
-<div class="std">
-<h3>X.Y.Z Bounded value<span style="float:right">[alg.clamp]</span></h3>
+<xdiv class="std">
+<h3>X.Y.Z Bounded value<span style="float:right"> [alg.clamp]</span></h3>
 
 ```
 template<class T, class Compare = std::less<>>
@@ -189,4 +188,4 @@ if      ( value < min_value ) clamped_value = min_value;
 else if ( value > max_value ) clamped_value = max_value;
 </code></pre>
 
-[^2]: As suggested by Jonathan Wakeley on mailing list accu-general on 18 February 2014.
+[^2]: As suggested by Jonathan Wakely on mailing list accu-general on 18 February 2014.
