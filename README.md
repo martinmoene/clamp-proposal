@@ -10,14 +10,18 @@
 -- ISO/IEC JTC1 SC22 WG21 D*dddd* *yyyy-mm-dd*
 -->
 
-**Document number**: N4536  
-**Date**: 2015-05-17  
+**Document number**: Nxxxx  
+**Date**: 2015-xx-xx  
+**Revises**: N4536  
 **Project**: Programming Language C++, Library Evolution Working Group  
 **Reply to**: Martin Moene &lt;martin.moene (at) gmail.com&gt;, Niels Dekker &lt;n.dekker (at) xs4all.nl&gt;  
 
 
 An algorithm to "clamp" a value between a pair of boundary values
 ===================================================================
+
+**Changes since N4536**  
+Funtion `clamp_range()` is considered superfluous in view of the Ranges proposal and has been dropped from this proposal. 
 
 <a name="contents"></a>
 
@@ -53,12 +57,6 @@ Without a standardized way, people may (need to) define their own version of "cl
 
 	auto clamped_value = std::min( std::max( value, min_value ), max_value );
 
-For convenience we also propose an algorithm to clamp a series of values: 
-
-	std::vector<int> v{ 1,2,3,4,5,6,7,8,9 };
-	
-	auto clamped_v = clamp_range( v.begin(), v.end(), v.begin(), 3, 7 );
-
 In addition to the boundary values, one can provide a predicate that evaluates if a value is within the boundary.
  
 	struct rgb{ ... };
@@ -89,7 +87,7 @@ Like `std::min()` and `std::max()`, `clamp()` requires its arguments to be of th
 
 Design decisions
 ------------------
-We chose the name *clamp* as it is expressive and is already being used in other libraries [^2]. Another name could be *limit*. Other names for *clamp_range* could be *clamp_elements*, or *clamp_transform*.
+We chose the name *clamp* as it is expressive and is already being used in other libraries [^2]. Another name could be *limit*.
 
 `clamp()` can be regarded as a sibling of `std::min()` and `std::max()`. This makes it desirable to follow their interface using constexpr, passing parameters by const reference and returning the result by const reference. Passing values by `const &` is desired for types that have a possibly expensive copy constructor such as `cpp_int` of Boost.Multiprecision [[7]](#ref7) and `std::seminumeric::integer` from the Proposal for Unbounded-Precision Integer Types [[8](#8)].
 
@@ -115,21 +113,6 @@ constexpr const T& clamp( const T& v, const T& lo, const T& hi, Compare comp = C
 3 *Complexity*: `clamp` will call `comp` either one or two times before returning one of the three parameters.  
 
 4 *Remarks*: Returns the first argument when it is equivalent to one of the boundary arguments. 
-
-```
-template<class InputIterator, class OutputIterator, class Compare = std::less<>>
-OutputIterator clamp_range( InputIterator first, InputIterator last, OutputIterator result,
-    typename std::iterator_traits<InputIterator>::value_type const& lo,
-    typename std::iterator_traits<InputIterator>::value_type const& hi, Compare comp = Compare() );
-```
-1 *Requires*: T is `LessThanComparable` (Table 18) and `CopyAssignable` (Table 23).  
-
-2 *Returns*: `result + (last - first)`.  
-
-3 *Complexity*: Exactly `last - first` applications of `clamp` with the corresponding predicate.  
-
-4 *Remarks*: `result` may be equal to `first`.   
-
 </div>
 
 <a name="implementation"></a>
@@ -145,20 +128,6 @@ Clamp a value per predicate:
 	{
 	    return assert( !comp(hi, lo) ),
 	        comp(val, lo) ? lo : comp(hi, val) ? hi : val;
-	}
-
-Clamp range of values per predicate:
-
-	template<class InputIterator, class OutputIterator, class Compare>
-	OutputIterator clamp_range(
-	    InputIterator first, InputIterator last, OutputIterator result,
-	    typename std::iterator_traits<InputIterator>::value_type const& lo,
-	    typename std::iterator_traits<InputIterator>::value_type const& hi, Compare comp )
-	{
-	    using arg_type = decltype(lo);
-	
-	    return std::transform(
-	        first, last, result, [&](arg_type val) -> arg_type { return clamp(val, lo, hi, comp); } );
 	}
 
 
