@@ -10,18 +10,18 @@
 -- ISO/IEC JTC1 SC22 WG21 D*dddd* *yyyy-mm-dd*
 -->
 
-**Document number**: Nxxxx  
+**Document number**: P0025  
 **Date**: 2015-xx-xx  
 **Revises**: N4536  
 **Project**: Programming Language C++, Library Evolution Working Group  
 **Reply to**: Martin Moene &lt;martin.moene (at) gmail.com&gt;, Niels Dekker &lt;n.dekker (at) xs4all.nl&gt;  
 
 
-An algorithm to "clamp" a value between a pair of boundary values
-===================================================================
+An algorithm to "clamp" a value between a pair of boundary values (revision 1)
+================================================================================
 
 **Changes since N4536**  
-Funtion `clamp_range()` is considered superfluous in view of the Ranges proposal and has been dropped from this proposal. 
+Funtion `clamp_range()` is considered superfluous in view of the Ranges proposal and has been dropped from this proposal. To more closely follow `min()` and `max()`, `clamp()` has been split into two prototypes.
 
 <a name="contents"></a>
 
@@ -70,17 +70,13 @@ Function `clamp()` already exists in C++ libraries such as Boost [[1]](#ref1) an
 
 Impact on the standard
 ------------------------
-The clamp algorithms can be implemented as a pure library extension in C++14. The proposed wording is dependent on the void specialization of `<functional>`'s operator functors that is available since C++14 [[5]](#ref5)[[6]](#ref6).
+The clamp algorithms can be implemented as a pure library extension. We suggest to add them to sub-clause 25.4 Sorting and related operations of the Algorithms library.
 
 
 <a name="comparison"></a>
 
 Comparison to clamp of Boost.Algorithm
 ----------------------------------------
-Our proposal defines a single function that can be used both with a user-defined predicate and without it. When no predicate is specified, the comparator defaults to `std::less<void>()`. The void specialization of `<functional>`'s operator functors introduced in C++14 enables comparison using the proper type [[5]](#ref5)[[6]](#ref6). 
-
-Boost's clamp on the other hand was conceived before C++14 and uses two separate functions. Also, supporting compatibility with different versions of C++ is a reason for a Boost library to not require C++14-specific properties.
-
 Like `std::min()` and `std::max()`, `clamp()` requires its arguments to be of the same  type, whereas, Boost's clamp accepts arguments of different type.
 
 <a name="motivation"></a>
@@ -89,9 +85,7 @@ Design decisions
 ------------------
 We chose the name *clamp* as it is expressive and is already being used in other libraries [^2]. Another name could be *limit*.
 
-`clamp()` can be regarded as a sibling of `std::min()` and `std::max()`. This makes it desirable to follow their interface using constexpr, passing parameters by const reference and returning the result by const reference. Passing values by `const &` is desired for types that have a possibly expensive copy constructor such as `cpp_int` of Boost.Multiprecision [[7]](#ref7) and `std::seminumeric::integer` from the Proposal for Unbounded-Precision Integer Types [[8](#8)].
-
-With the void specialization of `<functional>`'s operator functors available in C++14, we chose to combine the predicate and non-predicate versions into a single function and make `std::less<>()` its default comparator.
+`clamp()` can be regarded as a sibling of `std::min()` and `std::max()`. This makes it desirable to follow their interface using constexpr, passing parameters by const reference and returning the result by const reference. Passing values by `const &` is desired for types that have a possibly expensive copy constructor such as `cpp_int` of Boost.Multiprecision [[5]](#ref5) and `std::seminumeric::integer` from the Proposal for Unbounded-Precision Integer Types [[6](#6)].
 
 
 <a name="wording"></a>
@@ -100,26 +94,36 @@ Proposed wording
 -------------------
 
 <xdiv class="std">
-<h3>X.Y.Z Bounded value<span style="float:right"> [alg.clamp]</span></h3>
+<h3>25.4.X Bounded value<span style="float:right"> [alg.clamp]</span></h3>
 
 ```
-template<class T, class Compare = std::less<>>
-constexpr const T& clamp( const T& v, const T& lo, const T& hi, Compare comp = Compare() );
+template<class T>
+constexpr const T& clamp( const T& v, const T& lo, const T& hi );
+
+template<class T, class Compare>
+constexpr const T& clamp( const T& v, const T& lo, const T& hi, Compare comp );
 ```
-1 *Requires*: Type `T` is `LessThanComparable` (Table 18).  
+1 *Requires*: For the first form, type T shall be LessThanComparable (Table 18).
 
-2 *Returns*: The larger value of `v` and `lo` if `v` is smaller than `hi`, otherwise the smaller value of `v` and `hi`.  
+2 *Returns*: The larger value of v and lo if v is smaller than hi, otherwise the smaller value of v and hi.
 
-3 *Complexity*: `clamp` will call `comp` either one or two times before returning one of the three parameters.  
+3 *Remarks*: Returns the first argument when it is equivalent to one of the boundary arguments.
 
-4 *Remarks*: Returns the first argument when it is equivalent to one of the boundary arguments. 
+4 *Complexity*: At most two comparisons.
 </div>
 
 <a name="implementation"></a>
 
 Possible implementation
 -------------------------
-A reference implementation of this proposal can be found at GitHub [[9]](#ref9).
+
+Clamp a value:
+
+	template<class T>
+	constexpr const T& clamp( const T& v, const T& lo, const T& hi )
+	{
+		return clamp( v, lo, hi, less<T>() );
+	}
 
 Clamp a value per predicate:
 
@@ -135,7 +139,7 @@ Clamp a value per predicate:
 
 Acknowledgements
 ------------------
-Thanks to Marshall Clow for Boost.Algorithm's clamp which inspired this proposal and to Jonathan Wakely for his help with the proposing process.
+Thanks to Marshall Clow for Boost.Algorithm's clamp which inspired this proposal and to Daniel Krügler and Jonathan Wakely for their help with the proposing process.
 
 <a name="references"></a>
 
@@ -146,11 +150,8 @@ Note: the Boost documentation shows `clamp()` using pass by value, whereas the a
 <a name="ref2"></a>[2] Microsoft. [C++ Accelerated Massive Parallelism library (AMP)](http://msdn.microsoft.com/en-us/library/hh265137.aspx).  
 <a name="ref3"></a>[3] Qt Project. [Documentation on qBound](http://qt-project.org/doc/qt-5/qtglobal.html#qBound).  
 <a name="ref4"></a>[4] Scipy.org. [Documentation on numpy.clip](http://docs.scipy.org/doc/numpy/reference/generated/numpy.clip.html).  
-<a name="ref5"></a>[5] Stephan T. Lavavej. [Making Operator Functors greater<> (N3421, HTML)](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3421.htm). 2012-09-20.  
-<a name="ref6"></a>[6] ISO/IEC. [Working Draft, Standard for Programming Language C++ (N4296, PDF)](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4296.pdf). Section 20.9.6. 2014-11-19.  
-<a name="ref7"></a>[7] John Maddock. [Boost.Multiprecision](http://www.boost.org/doc/libs/1_55_0/libs/multiprecision/).  
-<a name="8"></a>[8] Pete Becker. [Proposal for Unbounded-Precision Integer Types (N4038)](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4038.html).  
-<a name="ref9"></a>[9] Martin Moene. [Clamp algorithm (GitHub)](https://github.com/martinmoene/clamp).  
+<a name="ref7"></a>[5] John Maddock. [Boost.Multiprecision](http://www.boost.org/doc/libs/1_55_0/libs/multiprecision/).  
+<a name="8"></a>[6] Pete Becker. [Proposal for Unbounded-Precision Integer Types (N4038)](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4038.html).    
 
 [^1]: Or even:<pre><code>auto clamped_value = value;
 if      ( value < min_value ) clamped_value = min_value;
