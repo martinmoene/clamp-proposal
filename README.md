@@ -11,7 +11,7 @@
 -->
 
 **Document number**: P0025  
-**Date**: 2015-xx-xx  
+**Date**: 2015-09-18  
 **Revises**: N4536  
 **Project**: Programming Language C++, Library Evolution Working Group  
 **Reply to**: Martin Moene &lt;martin.moene (at) gmail.com&gt;, Niels Dekker &lt;n.dekker (at) xs4all.nl&gt;  
@@ -21,7 +21,7 @@ An algorithm to "clamp" a value between a pair of boundary values (revision 1)
 ================================================================================
 
 **Changes since N4536**  
-Funtion `clamp_range()` is considered superfluous in view of the Ranges proposal and has been dropped from this proposal. To more closely follow `min()` and `max()`, `clamp()` has been split into two prototypes.
+Funtion `clamp_range()` is considered superfluous in view of the Ranges proposal and has been dropped from this proposal. The declaration style of `clamp()` has been made consistent with the one of `min()` and `max()`.
 
 <a name="contents"></a>
 
