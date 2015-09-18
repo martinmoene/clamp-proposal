@@ -2,7 +2,7 @@
 
 setlocal
 
-set title=clamp: An algorithm to 'clamp' a value between a pair of boundary values (Draft)
+set title=clamp: An algorithm to 'clamp' a value between a pair of boundary values
 
 for %%f in (*.md) do (
 
