@@ -10,15 +10,18 @@
 -- ISO/IEC JTC1 SC22 WG21 D*dddd* *yyyy-mm-dd*
 -->
 
-**Document number**: P0025  
-**Date**: 2015-09-18  
-**Revises**: N4536  
+**Document number**: D0025R1  
+**Date**: 2015-10-25  
+**Revises**: P0025R0  
 **Project**: Programming Language C++, Library Evolution Working Group  
 **Reply to**: Martin Moene &lt;martin.moene (at) gmail.com&gt;, Niels Dekker &lt;n.dekker (at) xs4all.nl&gt;  
 
 
-An algorithm to "clamp" a value between a pair of boundary values (revision 1)
+An algorithm to "clamp" a value between a pair of boundary values (revision 2)
 ================================================================================
+
+**Changes since P0025R0**  
+The requirement for `lo` to be no greater than `hi` has been added per request of SG6. The example using the predicate form has been replaced.
 
 **Changes since N4536**  
 Funtion `clamp_range()` is considered superfluous in view of the Ranges proposal and has been dropped from this proposal. The declaration style of `clamp()` has been made consistent with the one of `min()` and `max()`.
@@ -59,9 +62,12 @@ Without a standardized way, people may (need to) define their own version of "cl
 
 In addition to the boundary values, one can provide a predicate that evaluates if a value is within the boundary.
  
-	struct rgb{ ... };
+	// Clamp according to default, alphabetic order: yields "10"
+	auto clamped_alphabetic = clamp("10"s, "0"s, "9"s);
 	
-	auto clamped_rgb = clamp( rgb_value, rgb_lo, rgb_hi, rgb_compare );
+	// Clamp according to predicated, numeric order: yields "9"
+	auto clamped_numeric = clamp("10"s, "0"s, "9"s, 
+		[](const auto& lhs, const auto& rhs) { return stoi(lhs) < stoi(rhs); } );
 
 Function `clamp()` already exists in C++ libraries such as Boost [[1]](#ref1) and Microsoft AMP [[2]](#ref2). The Qt Project provides `qBound` [[3]](#ref3) , and the Python library scipy/numpy provides `clip()` [[4]](#ref4) for the same purpose.
 
@@ -103,7 +109,7 @@ constexpr const T& clamp( const T& v, const T& lo, const T& hi );
 template<class T, class Compare>
 constexpr const T& clamp( const T& v, const T& lo, const T& hi, Compare comp );
 ```
-1 *Requires*: For the first form, type T shall be LessThanComparable (Table 18).
+1 *Requires*: The value of lo shall be no greater than hi. For the first form, type T shall be LessThanComparable (Table 18). 
 
 2 *Returns*: The larger value of v and lo if v is smaller than hi, otherwise the smaller value of v and hi.
 
@@ -139,7 +145,7 @@ Clamp a value per predicate:
 
 Acknowledgements
 ------------------
-Thanks to Marshall Clow for Boost.Algorithm's clamp which inspired this proposal and to Daniel Krügler and Jonathan Wakely for their help with the proposing process.
+Thanks to Marshall Clow for Boost.Algorithm's clamp which inspired this proposal, to the BSI C++ panel for their feedback and to Daniel Krügler, Jonathan Wakely and Lawrence Crowl for their help with the proposing process.
 
 <a name="references"></a>
 
