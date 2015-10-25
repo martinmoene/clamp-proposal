@@ -13,7 +13,7 @@
 **Document number**: D0025R1  
 **Date**: 2015-10-25  
 **Revises**: P0025R0  
-**Project**: Programming Language C++, Library Evolution Working Group  
+**Project**: Programming Language C++, Library Working Group  
 **Reply to**: Martin Moene &lt;martin.moene (at) gmail.com&gt;, Niels Dekker &lt;n.dekker (at) xs4all.nl&gt;  
 
 
