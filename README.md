@@ -21,7 +21,7 @@ An algorithm to "clamp" a value between a pair of boundary values (revision 2)
 ================================================================================
 
 **Changes since P0025R0**  
-The requirement for `lo` to be no greater than `hi` has been added per request of SG6. The example using the predicate form has been replaced.
+The requirement for `lo` to be no greater than `hi` has been added per guidance from SG6 (Numerics) and LEWG. The example using the predicate form has been replaced.
 
 **Changes since N4536**  
 Funtion `clamp_range()` is considered superfluous in view of the Ranges proposal and has been dropped from this proposal. The declaration style of `clamp()` has been made consistent with the one of `min()` and `max()`.
