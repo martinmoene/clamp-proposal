@@ -83,7 +83,7 @@ The clamp algorithms can be implemented as a pure library extension. We suggest 
 
 Comparison to clamp of Boost.Algorithm
 ----------------------------------------
-Like `std::min()` and `std::max()`, `clamp()` requires its arguments to be of the same  type, whereas, Boost's clamp accepts arguments of different type.
+Like `std::min()` and `std::max()`, `clamp()` requires its arguments to be of the same  type, whereas Boost's clamp accepts arguments of different type.
 
 <a name="motivation"></a>
 
