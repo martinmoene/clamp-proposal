@@ -21,10 +21,13 @@ An algorithm to "clamp" a value between a pair of boundary values (revision 2)
 ================================================================================
 
 **Changes since P0025R0**  
-The requirement for `lo` to be no greater than `hi` has been added per guidance from SG6 (Numerics) and LEWG. The example using the predicate form has been replaced.
+- The requirement for `lo` to be no greater than `hi` has been added per guidance from SG6 (Numerics) and LEWG. 
+- The example using the predicate form has been replaced. 
+- The name *limit* has been removed in favor of P0105, Rounding and Overflow in C++.
 
 **Changes since N4536**  
-Funtion `clamp_range()` is considered superfluous in view of the Ranges proposal and has been dropped from this proposal. The declaration style of `clamp()` has been made consistent with the one of `min()` and `max()`.
+- Funtion `clamp_range()` is considered superfluous in view of the Ranges proposal and has been dropped from this proposal. 
+- The declaration style of `clamp()` has been made consistent with the one of `min()` and `max()`.
 
 <a name="contents"></a>
 
@@ -89,7 +92,7 @@ Like `std::min()` and `std::max()`, `clamp()` requires its arguments to be of th
 
 Design decisions
 ------------------
-We chose the name *clamp* as it is expressive and is already being used in other libraries [^2]. Another name could be *limit*.
+We chose the name *clamp* as it is expressive and is already being used in other libraries [^2]. 
 
 `clamp()` can be regarded as a sibling of `std::min()` and `std::max()`. This makes it desirable to follow their interface using constexpr, passing parameters by const reference and returning the result by const reference. Passing values by `const &` is desired for types that have a possibly expensive copy constructor such as `cpp_int` of Boost.Multiprecision [[5]](#ref5) and `std::seminumeric::integer` from the Proposal for Unbounded-Precision Integer Types [[6](#6)].
 
