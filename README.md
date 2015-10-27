@@ -21,16 +21,21 @@ An algorithm to "clamp" a value between a pair of boundary values (revision 2)
 ================================================================================
 
 **Changes since P0025R0**  
-- The requirement for `lo` to be no greater than `hi` has been added per guidance from SG6 (Numerics) and LEWG. 
-- The example using the predicate form has been replaced. 
+
+- The requirement for `lo` to be no greater than `hi` has been added per guidance from SG6 (Numerics) and LEWG.  
+- The example using the predicate form has been replaced.  
 - The name *limit* has been removed in favor of P0105, Rounding and Overflow in C++.
+- Mention of `middle()` and `median()` has been added.  
 
 **Changes since N4536**  
-- Funtion `clamp_range()` is considered superfluous in view of the Ranges proposal and has been dropped from this proposal. 
-- The declaration style of `clamp()` has been made consistent with the one of `min()` and `max()`.
+
+- Funtion `clamp_range()` is considered superfluous in view of the Ranges proposal and has been dropped from this proposal.  
+- The declaration style of `clamp()` has been made consistent with the one of `min()` and `max()`.  
 
 <a name="contents"></a>
 
+Contents
+--------
 [Introduction](#introduction)  
 [Motivation](#motivation)  
 [Impact on the standard](#impact)  
@@ -96,6 +101,7 @@ We chose the name *clamp* as it is expressive and is already being used in other
 
 `clamp()` can be regarded as a sibling of `std::min()` and `std::max()`. This makes it desirable to follow their interface using constexpr, passing parameters by const reference and returning the result by const reference. Passing values by `const &` is desired for types that have a possibly expensive copy constructor such as `cpp_int` of Boost.Multiprecision [[5]](#ref5) and `std::seminumeric::integer` from the Proposal for Unbounded-Precision Integer Types [[6](#ref6)].
 
+It has been noted that a new function like `middle(a, b, c)` or `median(a, b, c)` could play the role of `clamp(a, b, c)`, removing the requirement on parameter order [[7](#ref7)]. This would increase the number of required comparisons [^3], as would only removing the requirement on the order of the boundary values of `clamp()` [^4]. It is likely that `clamp()` will be avoided in many use cases if it is more expensive to use than the combination of `min()` and `max()`, so we do not proceed along this path here. 
 
 <a name="wording"></a>
 
@@ -148,7 +154,7 @@ Clamp a value per predicate:
 
 Acknowledgements
 ------------------
-Thanks to Marshall Clow for Boost.Algorithm's clamp which inspired this proposal, to the BSI C++ panel for their feedback and to Daniel Krügler, Jonathan Wakely and Lawrence Crowl for their help with the proposing process.
+Thanks to Marshall Clow for Boost.Algorithm's clamp which inspired this proposal, to the BSI C++ panel for their feedback and to Daniel Krügler, Jonathan Wakely and Lawrence Crowl for their help with the proposing process and to Walter Brown for his offer to shepherd the paper through LWG.
 
 <a name="references"></a>
 
@@ -161,10 +167,29 @@ Note: the Boost documentation shows `clamp()` using pass by value, whereas the a
 <a name="ref4"></a>[4] Scipy.org. [Documentation on numpy.clip](http://docs.scipy.org/doc/numpy/reference/generated/numpy.clip.html).  
 <a name="ref5"></a>[5] John Maddock. [Boost.Multiprecision](http://www.boost.org/doc/libs/1_55_0/libs/multiprecision/).  
 <a name="ref6"></a>[6] Pete Becker. [Proposal for Unbounded-Precision Integer Types (N4038)](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4038.html).    
+<a name="ref7"></a>[7] Walter Brown. Post Kona review observation. Personal communication, 25 October 2015.  
 
-[^1]: Or even:<pre><code>auto clamped_value = value;
+[^1]: Or even:  
+```
+auto clamped_value = value;
 if      ( value < min_value ) clamped_value = min_value;
 else if ( value > max_value ) clamped_value = max_value;
-</code></pre>
-
+```
 [^2]: As suggested by Jonathan Wakely on mailing list accu-general on 18 February 2014.
+
+[^3]: `median()` expressed in `min()` and `max()`:  
+```
+template<class T>
+constexpr const T& median( const T& a, const T& b, const T& c )
+{
+    return max( min(a, b), min( max(a, b), c ) );
+}
+```
+[^4]: `clamp()` with free boundary order expressed in `min()` and `max()`:  
+```
+template<class T>
+constexpr const T& clamp( const T& v, const T& bound1, const T& bound2 )
+{
+    return min( max( v, min(bound1, bound2) ), max(bound1, bound2) );
+}
+```
