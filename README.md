@@ -43,7 +43,7 @@ Contents
 [Design decisions](#design)  
 [Proposed wording](#wording)  
 [Possible implementation](#implementation)  
-[Acknowledgements](#acknowledgements)  
+[Acknowledgments](#acknowledgments)  
 [References](#references)  
 
 
@@ -150,9 +150,9 @@ Clamp a value per predicate:
 	}
 
 
-<a name="acknowledgements"></a>
+<a name="acknowledgments"></a>
 
-Acknowledgements
+Acknowledgments
 ------------------
 Thanks to Marshall Clow for Boost.Algorithm's clamp which inspired this proposal, to the BSI C++ panel for their feedback and to Daniel Krügler, Jonathan Wakely and Lawrence Crowl for their help with the proposing process and to Walter Brown for his offer to shepherd the paper through LWG.
 
