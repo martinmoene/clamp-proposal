@@ -77,7 +77,7 @@ In addition to the boundary values, one can provide a predicate that evaluates i
 	auto clamped_numeric = clamp("10"s, "0"s, "9"s, 
 		[](const auto& lhs, const auto& rhs) { return stoi(lhs) < stoi(rhs); } );
 
-Function `clamp()` already exists in C++ libraries such as Boost [[1]](#ref1) and Microsoft AMP [[2]](#ref2). The Qt Project provides `qBound` [[3]](#ref3) , and the Python library scipy/numpy provides `clip()` [[4]](#ref4) for the same purpose.
+Function `clamp()` already exists in C++ libraries such as Boost [[1]](#ref1) and Microsoft AMP [[2]](#ref2). The Qt Project provides `qBound()` [[3]](#ref3) , and the Python library scipy/numpy provides `clip()` [[4]](#ref4) for the same purpose.
 
 
 <a name="impact"></a>
