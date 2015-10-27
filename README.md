@@ -25,11 +25,11 @@ An algorithm to "clamp" a value between a pair of boundary values (revision 2)
 - The requirement for `lo` to be no greater than `hi` has been added per guidance from SG6 (Numerics) and LEWG.  
 - The example using the predicate form has been replaced.  
 - The name *limit* has been removed in favor of P0105, Rounding and Overflow in C++.
-- Mention of `middle()` and `median()` has been added.  
+- A brief discussion of `middle()` and `median()` has been added.  
 
 **Changes since N4536**  
 
-- Funtion `clamp_range()` is considered superfluous in view of the Ranges proposal and has been dropped from this proposal.  
+- Function `clamp_range()` is considered superfluous in view of the Ranges proposal and has been dropped from this proposal.  
 - The declaration style of `clamp()` has been made consistent with the one of `min()` and `max()`.  
 
 <a name="contents"></a>
@@ -118,11 +118,11 @@ constexpr const T& clamp( const T& v, const T& lo, const T& hi );
 template<class T, class Compare>
 constexpr const T& clamp( const T& v, const T& lo, const T& hi, Compare comp );
 ```
-1 *Requires*: The value of lo shall be no greater than hi. For the first form, type T shall be LessThanComparable (Table 18). 
+1 *Requires*: The value of `lo` shall be no greater than `hi`. For the first form, type `T` shall be `LessThanComparable` (Table 18). 
 
-2 *Returns*: The larger value of v and lo if v is smaller than hi, otherwise the smaller value of v and hi.
+2 *Returns*: The larger value of `v` and `lo` if `v` is smaller than `hi`, otherwise the smaller value of `v` and `hi`.
 
-3 *Remarks*: Returns the first argument when it is equivalent to one of the boundary arguments.
+3 *Remarks*: Returns `v` when it is equivalent to `lo`, `hi`, or both.
 
 4 *Complexity*: At most two comparisons.
 </div>
@@ -177,7 +177,7 @@ else if ( value > max_value ) clamped_value = max_value;
 ```
 [^2]: As suggested by Jonathan Wakely on mailing list accu-general on 18 February 2014.
 
-[^3]: `median()` expressed in `min()` and `max()`:  
+[^3]: `median()` expressed via `min()` and `max()`:  
 ```
 template<class T>
 constexpr const T& median( const T& a, const T& b, const T& c )
@@ -185,7 +185,7 @@ constexpr const T& median( const T& a, const T& b, const T& c )
     return max( min(a, b), min( max(a, b), c ) );
 }
 ```
-[^4]: `clamp()` with free boundary order expressed in `min()` and `max()`:  
+[^4]: `clamp()` with free boundary order expressed via `min()` and `max()`:  
 ```
 template<class T>
 constexpr const T& clamp( const T& v, const T& bound1, const T& bound2 )
